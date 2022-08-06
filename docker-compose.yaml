@@ -1,0 +1,48 @@
+version: '3.7'
+volumes:
+  mongodb_data:
+
+services:
+  mongodb:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - 27017:27017
+
+  home-automation-ui:
+    image: shiviraj/home-automation-ui
+    container_name: home-automation-ui
+    environment:
+      - BFF_URL=https://localhost:3001
+    ports:
+      - 3000:3000
+    depends_on:
+      - home-automation-bff
+
+  home-automation-service:
+    image: shiviraj/home-automation-service
+    container_name: home-automation-service
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+    ports:
+      - 8080:8080
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+
+  home-automation-bff:
+    image: shiviraj/home-automation-bff
+    container_name: home-automation-bff
+    environment:
+      - BACKEND_URL=http://home-automation-service:8080
+    ports:
+      - 3001:3001
+    links:
+      - home-automation-service
+    depends_on:
+      - home-automation-service
+
+
