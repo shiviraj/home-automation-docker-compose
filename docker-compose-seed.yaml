@@ -6,7 +6,6 @@ services:
   home-automation-seed:
     container_name: home-automation-seed
     image: shiviraj/home-automation-seed
-    platform: linux/amd64
     environment:
       - MONGODB_URL=mongodb://mongodb:27017
     links:

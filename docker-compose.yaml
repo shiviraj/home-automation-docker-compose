@@ -6,7 +6,6 @@ services:
   mongodb:
     container_name: mongo
     image: mongo
-    platform: linux/amd64
     volumes:
       - mongodb_data:/data/db
     ports:
@@ -15,7 +14,6 @@ services:
   home-automation-ui:
     image: shiviraj/home-automation-ui
     container_name: home-automation-ui
-    platform: linux/amd64
     environment:
       - BFF_URL=https://localhost:3001
     ports:
@@ -26,7 +24,6 @@ services:
   home-automation-service:
     image: shiviraj/home-automation-service
     container_name: home-automation-service
-    platform: linux/amd64
     environment:
       - MONGODB_URL=mongodb://mongodb:27017
     ports:
@@ -39,7 +36,6 @@ services:
   home-automation-bff:
     image: shiviraj/home-automation-bff
     container_name: home-automation-bff
-    platform: linux/amd64
     environment:
       - BACKEND_URL=http://home-automation-service:8080
     ports:
@@ -48,3 +44,5 @@ services:
       - home-automation-service
     depends_on:
       - home-automation-service
+
+
