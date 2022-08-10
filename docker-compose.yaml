@@ -1,13 +1,17 @@
 version: '3.7'
+
 volumes:
-  mongodb_data:
+  db:
+    name: db
 
 services:
-  mongodb:
-    container_name: mongo
-    image: mongo
+  raspberrypi-db-server:
+    container_name: raspberrypi-db-server
+    image: shiviraj/raspberrypi-db-server
     volumes:
-      - mongodb_data:/data/db
+      - db:/app/dist/db
+    environment:
+      - AUTH=${DATABASE_AUTH}
     ports:
       - 27017:27017
 
@@ -15,23 +19,26 @@ services:
     image: shiviraj/home-automation-ui
     container_name: home-automation-ui
     environment:
-      - BFF_URL=https://localhost:3001
+      - BFF_URL=https://home-automation-bff:3001
     ports:
       - 3000:3000
     depends_on:
+      - home-automation-bff
+    links:
       - home-automation-bff
 
   home-automation-service:
     image: shiviraj/home-automation-service
     container_name: home-automation-service
     environment:
-      - MONGODB_URL=mongodb://mongodb:27017
+      - DB_URL=${DB_URL}
+      - DB_NAME=${DB_NAME}
     ports:
       - 8080:8080
     links:
-      - mongodb
+      - raspberrypi-db-server
     depends_on:
-      - mongodb
+      - raspberrypi-db-server
 
   home-automation-bff:
     image: shiviraj/home-automation-bff
