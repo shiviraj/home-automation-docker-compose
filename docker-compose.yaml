@@ -1,19 +1,35 @@
-version: '3.7'
-
-volumes:
-  db:
-    name: db
+version: '3.8'
 
 services:
   raspberrypi-db-server:
     container_name: raspberrypi-db-server
     image: shiviraj/raspberrypi-db-server
     volumes:
-      - db:/app/dist/db
+      - ~/raspberrypi-db:/app/dist/db
     environment:
       - AUTH=${DATABASE_AUTH}
     ports:
       - 27017:27017
+
+  mqtt:
+    container_name: mqtt
+    image: eclipse-mosquitto
+    restart: always
+    volumes:
+      - ~/mosquitto/config:/mosquitto/config
+      - ~/mosquitto/data:/mosquitto/data
+      - ~/mosquitto/log:/mosquitto/log
+    ports:
+      - 1883:1883
+
+  #  home-automation-seed:
+  #    container_name: home-automation-seed
+  #    image: shiviraj/home-automation-seed
+  #    environment:
+  #      - DB_URL=${DB_URL}
+  #      - DB_NAME=${DB_NAME}
+  #    depends_on:
+  #      - raspberrypi-db-server
 
   home-automation-ui:
     image: shiviraj/home-automation-ui
@@ -33,6 +49,7 @@ services:
     environment:
       - DB_URL=${DB_URL}
       - DB_NAME=${DB_NAME}
+      - SECRET_KEY=${SECRET_KEY}
     ports:
       - 8080:8080
     links:
@@ -45,10 +62,15 @@ services:
     container_name: home-automation-bff
     environment:
       - BACKEND_URL=http://home-automation-service:8080
+      - MQTT_URL=mqtt://mqtt:1883
+      - MQTT_USERNAME=${MQTT_USERNAME}
+      - MQTT_PASSWORD=${MQTT_PASSWORD}
+      - INTERNAL_TOKEN=${INTERNAL_TOKEN}
     ports:
       - 3001:3001
     links:
       - home-automation-service
+      - mqtt
     depends_on:
       - home-automation-service
 
