@@ -22,14 +22,14 @@ services:
     ports:
       - 1883:1883
 
-  #  home-automation-seed:
-  #    container_name: home-automation-seed
-  #    image: shiviraj/home-automation-seed
-  #    environment:
-  #      - DB_URL=${DB_URL}
-  #      - DB_NAME=${DB_NAME}
-  #    depends_on:
-  #      - raspberrypi-db-server
+  home-automation-seed:
+    container_name: home-automation-seed
+    image: shiviraj/home-automation-seed
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - raspberrypi-db-server
 
   home-automation-ui:
     image: shiviraj/home-automation-ui
@@ -37,7 +37,7 @@ services:
     environment:
       - BFF_URL=https://home-automation-bff:3001
     ports:
-      - 3000:3000
+      - 80:80
     depends_on:
       - home-automation-bff
     links:
@@ -73,5 +73,3 @@ services:
       - mqtt
     depends_on:
       - home-automation-service
-
-
