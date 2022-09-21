@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  nginx:
+    image: shiviraj/home-automation-nginx
+    container_name: nginx
+    depends_on:
+      - raspberrypi-db-server
+      - mqtt
+      - home-automation-service
+      - home-automation-bff
+      - home-automation-ui
+    ports:
+      - 80:80
+
   raspberrypi-db-server:
     container_name: raspberrypi-db-server
     image: shiviraj/raspberrypi-db-server
@@ -34,13 +46,9 @@ services:
   home-automation-ui:
     image: shiviraj/home-automation-ui
     container_name: home-automation-ui
-    environment:
-      - BFF_URL=https://home-automation-bff:3001
     ports:
-      - 80:80
+      - 3000:3000
     depends_on:
-      - home-automation-bff
-    links:
       - home-automation-bff
 
   home-automation-service:
