@@ -10,3 +10,4 @@ log_dest stdout
 log_dest file /mosquitto/log/mosquitto.log
 connection_messages true
 password_file /mosquitto/config/pwfile' >> ~/mosquitto/config/mosquitto.conf
+touch ~/mosquitto/config/pwfile
