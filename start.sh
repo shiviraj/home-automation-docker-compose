@@ -1,7 +1,5 @@
 #!/bin/bash
 
-mkdir -p ~/mosquitto/config ~/mosquitto/data ~/mosquitto/log ~/raspberrypi-db
-
 if [ $1 == "up" ]; then
   if [ $2 == "seed" ]; then
     docker-compose -f docker-compose.yaml -f docker-compose-seed.yaml up -d

@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 
 services:
   nginx:
@@ -36,14 +36,14 @@ services:
     ports:
       - 1883:1883
 
-  home-automation-seed:
-    container_name: home-automation-seed
-    image: shiviraj/home-automation-seed
-    environment:
-      - DB_URL=${DB_URL}
-      - DB_NAME=${DB_NAME}
-    depends_on:
-      - raspberrypi-db-server
+  #  home-automation-seed:
+  #    container_name: home-automation-seed
+  #    image: shiviraj/home-automation-seed
+  #    environment:
+  #      - DB_URL=${DB_URL}
+  #      - DB_NAME=${DB_NAME}
+  #    depends_on:
+  #      - raspberrypi-db-server
 
   home-automation-ui:
     image: shiviraj/home-automation-ui
