@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  home-automation-seed:
+    image: shiviraj/home-automation-seed
+    container_name: home-automation-seed
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_NAME=${DB_NAME}
+    links:
+      - raspberrypi-db-server
+    depends_on:
+      - raspberrypi-db-server
+
+  raspberrypi-db-server:
+    container_name: raspberrypi-db-server
+    image: shiviraj/raspberrypi-db-server
+    restart: always
+    volumes:
+      - ${DB_PATH}:/app/dist/db
+    environment:
+      - AUTH=${DATABASE_AUTH}
+    ports:
+      - 27017:27017

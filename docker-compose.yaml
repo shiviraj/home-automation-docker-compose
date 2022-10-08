@@ -1,9 +1,10 @@
-version: '3.3'
+version: '3.8'
 
 services:
   nginx:
     image: nginx
     container_name: nginx
+    restart: always
     depends_on:
       - raspberrypi-db-server
       - mqtt
@@ -18,8 +19,9 @@ services:
   raspberrypi-db-server:
     container_name: raspberrypi-db-server
     image: shiviraj/raspberrypi-db-server
+    restart: always
     volumes:
-      - ~/raspberrypi-db:/app/dist/db
+      - ${DB_PATH}:/app/dist/db
     environment:
       - AUTH=${DATABASE_AUTH}
     ports:
@@ -30,24 +32,16 @@ services:
     image: eclipse-mosquitto
     restart: always
     volumes:
-      - ~/mosquitto/config:/mosquitto/config
-      - ~/mosquitto/data:/mosquitto/data
-      - ~/mosquitto/log:/mosquitto/log
+      - ${MQTT_PATH}/config:/mosquitto/config
+      - ${MQTT_PATH}/data:/mosquitto/data
+      - ${MQTT_PATH}/log:/mosquitto/log
     ports:
       - 1883:1883
-
-  #  home-automation-seed:
-  #    container_name: home-automation-seed
-  #    image: shiviraj/home-automation-seed
-  #    environment:
-  #      - DB_URL=${DB_URL}
-  #      - DB_NAME=${DB_NAME}
-  #    depends_on:
-  #      - raspberrypi-db-server
 
   home-automation-ui:
     image: shiviraj/home-automation-ui
     container_name: home-automation-ui
+    restart: always
     ports:
       - 3000:3000
     depends_on:
@@ -56,30 +50,14 @@ services:
   home-automation-service:
     image: shiviraj/home-automation-service
     container_name: home-automation-service
+    restart: always
     environment:
       - DB_URL=${DB_URL}
       - DB_NAME=${DB_NAME}
       - SECRET_KEY=${SECRET_KEY}
     ports:
-      - 8080:8080
-    links:
-      - raspberrypi-db-server
-    depends_on:
-      - raspberrypi-db-server
-
-  home-automation-bff:
-    image: shiviraj/home-automation-bff
-    container_name: home-automation-bff
-    environment:
-      - BACKEND_URL=http://home-automation-service:8080
-      - MQTT_URL=mqtt://mqtt:1883
-      - MQTT_USERNAME=${MQTT_USERNAME}
-      - MQTT_PASSWORD=${MQTT_PASSWORD}
-      - INTERNAL_TOKEN=${INTERNAL_TOKEN}
-    ports:
       - 3001:3001
     links:
-      - home-automation-service
-      - mqtt
+      - raspberrypi-db-server
     depends_on:
-      - home-automation-service
+      - raspberrypi-db-server

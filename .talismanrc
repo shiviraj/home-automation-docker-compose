@@ -1,0 +1,4 @@
+fileignoreconfig:
+- filename: default.conf
+  checksum: 6df27edb9de8f1c536268bef7d0ac0fb675f47fe1215b79c394f8dabb11c170a
+version: ""
