@@ -9,7 +9,6 @@ services:
       - raspberrypi-db-server
       - mqtt
       - home-automation-service
-      - home-automation-bff
       - home-automation-ui
     volumes:
       - ${CONF_PATH}:/etc/nginx/conf.d/default.conf
@@ -45,7 +44,7 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - home-automation-bff
+      - home-automation-service
 
   home-automation-service:
     image: shiviraj/home-automation-service
