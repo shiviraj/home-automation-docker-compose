@@ -54,9 +54,13 @@ services:
       - DB_URL=${DB_URL}
       - DB_NAME=${DB_NAME}
       - SECRET_KEY=${SECRET_KEY}
+      - MQTT_URL=http://mqtt
+      - MQTT_USERNAME=${MQTT_USERNAME}
+      - MQTT_PASSWORD=${MQTT_PASSWORD}
     ports:
       - 3001:3001
     links:
       - raspberrypi-db-server
     depends_on:
       - raspberrypi-db-server
+      - mqtt
