@@ -1,6 +1,6 @@
 ### Installation process
 
-1. install docker and docker-compsoe
+1. install docker and docker-compose
 
 ```sh
 sudo apt-get update && sudo apt-get upgrade
